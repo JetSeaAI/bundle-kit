@@ -1,0 +1,18 @@
+# Workflow artifacts stay on the host, outside the public repository.
+/enrollment/*
+!/enrollment/.gitkeep
+/delivery/*
+!/delivery/.gitkeep
+/install/*
+!/install/.gitkeep
+
+# Local credentials and environment settings must never be published.
+.mmp-cred/
+mmp-cred/
+.aws/
+.env
+.env.*
+*.key
+*.pem
+*.priv
+*.lic

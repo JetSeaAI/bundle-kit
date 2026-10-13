@@ -1,0 +1,90 @@
+x-settings:
+  # ========== 修改項目：更多詳細內容請參考 README.md 的 x-settings 說明。==========
+  DOCKER_GID: &dockerGid "CHANGE_ME" # 執行： stat -c '%g' /var/run/docker.sock
+  HOST_USER: &hostUser "1000:1000" # 執行： id -u 與 id -g，填入 UID:GID
+  MRAN_DIR: &mranDir /path/to/MOOS-ROS-Autonomous-Navigation
+  LICENSE_FILE: &licenseFile /path/to/client.lic
+  MISSION_FOLDER: &missionFolder /path/to/prepared-mission
+  TARGET: &target template # for example, iog
+  # ==========================================================================
+  # ============================不需要修改此處。=================================
+  BUNDLE_DIR: &bundleDir .
+  ENROLLMENT_FILE: &enrollmentFile /bundle/enrollment/bundle-enrollment.tar
+  TEMPLATE_DIR: &templateDir /bundle/delivery/template
+  DELIVERY_FILE: &deliveryFile /bundle/delivery/bundle-delivery.tar
+  # ==========================================================================
+
+  # 選項可加入 --force、--version "1.0.0" 或 --verbose。
+  template_command: &templateCommand
+    - bundle-template
+    - --target
+    - *target
+    - --out
+    - *templateDir
+  create_command: &createCommand
+    - bundle-create
+    - --bundle
+    - *templateDir
+    - --enrollment
+    - *enrollmentFile
+    - --license-file
+    - *licenseFile
+    - --mission-folder
+    - *missionFolder
+    - --out
+    - *deliveryFile
+
+services:
+  template:
+    image: jetseaaiusvfleet/bundle-tools:publish
+    user: *hostUser
+    working_dir: /bundle
+    command: *templateCommand
+    volumes:
+      - &bundleMount
+        type: bind
+        source: *bundleDir
+        target: /bundle
+        bind:
+          create_host_path: false
+      - &credentialMount
+        type: bind
+        source: ${HOME}/.mmp-cred
+        target: /.mmp-cred
+        bind:
+          create_host_path: false
+      - &mranMount
+        type: bind
+        source: *mranDir
+        target: /MRAN
+        read_only: true
+        bind:
+          create_host_path: false
+
+  create:
+    image: jetseaaiusvfleet/bundle-tools:publish
+    user: *hostUser
+    group_add: [*dockerGid]
+    working_dir: /bundle
+    command: *createCommand
+    volumes:
+      - *bundleMount
+      - *credentialMount
+      - *mranMount
+      - type: bind
+        source: *licenseFile
+        target: *licenseFile
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: *missionFolder
+        target: *missionFolder
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: false

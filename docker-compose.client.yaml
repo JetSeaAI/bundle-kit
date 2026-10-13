@@ -1,0 +1,70 @@
+x-settings:
+  # ========== 修改項目：更多詳細內容請參考 README.md 的 x-settings 說明。==========
+  DOCKER_GID: &dockerGid "CHANGE_ME" # 執行： stat -c '%g' /var/run/docker.sock
+  HOST_USER: &hostUser "1000:1000" # 執行： id -u 與 id -g，填入 UID:GID
+  # ==========================================================================
+  # ============================不需要修改此處。=================================
+  BUNDLE_DIR: &bundleDir .
+  ENROLLMENT_FILE: &enrollmentFile /bundle/enrollment/bundle-enrollment.tar
+  DELIVERY_FILE: &deliveryFile /bundle/delivery/bundle-delivery.tar
+  INSTALL_DIR: &installDir /bundle/install/runtime
+  # ==========================================================================
+
+  # 選項只需加在對應清單，例如 --verbose。
+  enrollment_command: &enrollmentCommand
+    - bundle-setup
+    - --out
+    - *enrollmentFile
+  install_command: &installCommand
+    - bundle-install
+    - --input
+    - *deliveryFile
+    - --dest
+    - *installDir
+
+services:
+  enrollment:
+    image: jetseaaiusvfleet/bundle-tools:client
+    user: *hostUser
+    working_dir: /bundle
+    command: *enrollmentCommand
+    volumes:
+      - &bundleMount
+        type: bind
+        source: *bundleDir
+        target: /bundle
+        bind:
+          create_host_path: false
+      - &credentialMount
+        type: bind
+        source: ${HOME}/.mmp-cred
+        target: /.mmp-cred
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /sys
+        target: /sys
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /proc/cpuinfo
+        target: /proc/cpuinfo
+        read_only: true
+        bind:
+          create_host_path: false
+
+  install:
+    image: jetseaaiusvfleet/bundle-tools:client
+    user: *hostUser
+    group_add: [*dockerGid]
+    working_dir: /bundle
+    command: *installCommand
+    volumes:
+      - *bundleMount
+      - *credentialMount
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: false
