@@ -4,8 +4,8 @@
 
 ### 1. 準備主機
 
-安裝 Docker Engine、Docker Compose 與 Docker Buildx，並確認目前使用者可使用 Docker。
-建立工作目錄與憑證目錄：
+安裝 Docker Engine、Docker Compose、Docker Buildx 與 OpenSSL（產生金鑰的工具），
+並確認目前使用者可使用 Docker。以下指令請在 `bundle-kit/` 目錄執行。
 
 下載 Docker 客戶端映像：
 ```bash
@@ -23,7 +23,30 @@
 ./pull-images.sh publish -t v0.0.1
 ```
 
-### 2. 編輯設定
+### 2. 準備金鑰
+
+在執行 Compose 前，依本機角色準備金鑰。請以一般主機使用者執行，不要使用 `sudo`：
+
+- 客戶端：
+
+  ```bash
+  bash ./generate_client_keys.sh
+  ```
+
+- 發行者：
+
+  ```bash
+  bash ./generate_publisher_keys.sh
+  ```
+
+腳本會建立 `~/.mmp-cred/`，並產生對應角色的私鑰與公鑰：
+
+| 角色 | 私鑰 | 公鑰 |
+|---|---|---|
+| 客戶端 | `mmp_client` | `mmp_client.pub` |
+| 發行者 | `mmp_publisher` | `mmp_publisher.pub` |
+
+### 3. 編輯設定
 
 編輯 `docker-compose.client.yaml` 的 `x-settings`，填入客戶主機與註冊資料：
 
