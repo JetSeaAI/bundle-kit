@@ -10,13 +10,17 @@
 下載 Docker 客戶端映像：
 ```bash
 # 正在處理客戶端註冊或安裝時，下載 client image
-docker compose -f docker-compose.client.yaml pull
+./pull-images.sh client
+# 指定版本（預設 latest）：
+./pull-images.sh client -t v0.0.1
 ```
 
 下載 Docker 發行者映像（私有映像，需要先 `docker login`）：
 ```bash
 # 正在建立範本或交付檔時，下載 publish image
-docker compose -f docker-compose.publisher.yaml pull
+./pull-images.sh publish
+# 指定版本（預設 latest）：
+./pull-images.sh publish -t v0.0.1
 ```
 
 ### 2. 編輯設定

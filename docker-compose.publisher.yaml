@@ -36,7 +36,7 @@ x-settings:
 
 services:
   template:
-    image: jetseaaiusvfleet/bundle-tools:publish
+    image: jetseaaiusvfleet/bundle-tools-publish:latest
     user: *hostUser
     working_dir: /bundle
     command: *templateCommand
@@ -62,7 +62,7 @@ services:
           create_host_path: false
 
   create:
-    image: jetseaaiusvfleet/bundle-tools:publish
+    image: jetseaaiusvfleet/bundle-tools-publish:latest
     user: *hostUser
     group_add: [*dockerGid]
     working_dir: /bundle
