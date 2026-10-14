@@ -1,9 +1,9 @@
 x-settings:
   # ========== 修改項目：更多詳細內容請參考 README.md 的 x-settings 說明。==========
   DOCKER_GID: &dockerGid "CHANGE_ME" # 執行： stat -c '%g' /var/run/docker.sock
-  HOST_USER: &hostUser "1000:1000" # 執行： id -u 與 id -g，填入 UID:GID
   # ==========================================================================
   # ============================不需要修改此處。=================================
+  HOST_USER: &hostUser "1000:1000" # 執行： id -u 與 id -g，填入 UID:GID
   BUNDLE_DIR: &bundleDir .
   ENROLLMENT_FILE: &enrollmentFile /bundle/enrollment/bundle-enrollment.tar
   DELIVERY_FILE: &deliveryFile /bundle/delivery/bundle-delivery.tar
