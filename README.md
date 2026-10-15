@@ -84,21 +84,7 @@ docker compose -f docker-compose.client.yaml run --rm enrollment
 
 ### 3. 發行者：準備 MOOS 任務
 
-將已準備完成的任務放在 `MISSION_FOLDER` 指定的位置。任務需包含 `deployment.yaml`
-及其中列出的 `.moos`、`.bhv` 檔案；若沒有 behavior 檔，將 `bhv` 設為 `none`。
-發行工具不會執行任務啟動腳本，也不會產生或修改這些檔案。
-
-`deployment.yaml` 範例：
-
-```yaml
-components:
-  shoreside:
-    moos: shoreside.moos
-    bhv: none
-  vehicle:
-    moos: vehicle.moos
-    bhv: vehicle.bhv
-```
+將已準備完成的任務放在 `MISSION_FOLDER` 指定的位置。在任務資料夾中需包含 [`deployment.yaml`](deployment-template.yaml)。可將[`deployment-template.yaml`](deployment-template.yaml) 複製至任務資料夾中，命名為 `deployment.yaml` 並依需求修改。
 
 ### 4. 發行者：建立客戶交付範本
 

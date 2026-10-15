@@ -1,0 +1,17 @@
+# 任務 deployment.yaml 範例
+version: 1 # deployment.yaml 的版本
+
+payload: # 任務封包的基本資訊
+  package-version: 1.0.0
+  client: example-client # 客戶識別值，可自行修改
+
+log_path: /home/moos-dawg/logs # 日誌存放路徑 (docker container 的內部值)
+time_warp: 1 # 時間加速倍率
+
+components: # 固定組件
+  shoreside: # 組件名稱
+    moos: targ_shoreside.moos # 讀取對應的 MOOS 配置檔
+    bhv: none # 讀取對應的行為配置檔
+  vehicle: # 組件名稱
+    moos: targ_vehicle.moos # 讀取對應的 MOOS 配置檔
+    bhv: targ_vehicle.bhv # 讀取對應的行為配置檔
